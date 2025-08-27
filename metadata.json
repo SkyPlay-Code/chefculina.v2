@@ -1,0 +1,5 @@
+{
+  "name": "Chef Culina's Recipe Book",
+  "description": "An AI-powered recipe search tool that allows users to find recipes by name or by ingredients they have on hand.",
+  "requestFramePermissions": []
+}
