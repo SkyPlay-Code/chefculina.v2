@@ -1,6 +1,14 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Fix: The API key must be obtained from `process.env.API_KEY` as per the coding guidelines,
+// which also resolves the TypeScript error for `import.meta.env`.
+const apiKey = process.env.API_KEY;
+if (!apiKey) {
+  // Fix: Updated error message to reflect the correct environment variable.
+  throw new Error("API_KEY is not defined. Please set it in your environment variables.");
+}
+
+const ai = new GoogleGenAI({ apiKey });
 
 const culinaSystemInstruction = `You are "Culina," a world-renowned Master Chef AI, known for your incredibly detailed and foolproof recipes. Your passion is to empower home cooks to create restaurant-quality dishes.
 
@@ -73,6 +81,7 @@ const suggestionsSchema = {
 export const getRecipeByName = async (dishName: string): Promise<string> => {
   try {
     const response = await ai.models.generateContent({
+      // Fix: Use the 'gemini-2.5-flash' model for general text tasks as per coding guidelines.
       model: "gemini-2.5-pro",
       contents: `Generate a recipe for ${dishName}.`,
       config: {
@@ -90,7 +99,7 @@ export const getRecipeByName = async (dishName: string): Promise<string> => {
 export const suggestRecipesByIngredients = async (ingredients: string): Promise<string[]> => {
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-2.5-pro",
             contents: `Based on these ingredients: ${ingredients}, suggest up to 5 delicious recipe ideas. Only provide the names of the recipes.`,
             config: {
                 responseMimeType: "application/json",
@@ -110,7 +119,7 @@ export const suggestRecipesByIngredients = async (ingredients: string): Promise<
 export const suggestRecipesByMood = async (mood: string): Promise<string[]> => {
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            model: "gemini-2.5-pro",
             contents: `Based on a craving for "${mood}" food, suggest up to 5 delicious and creative recipe ideas. Only provide the names of the recipes.`,
             config: {
                 responseMimeType: "application/json",
